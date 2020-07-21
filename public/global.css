@@ -1,3 +1,9 @@
+:root {
+  --primary: #e40763;
+  --font-sys: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -17,12 +23,12 @@ body {
 
 body {
   box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: var(--font-sys);
   color: #333;
   margin: 0;
-  padding: 2rem;
+  padding: 0 0 2rem 0;
   background: #f3f3f3;
+  overflow: hidden scroll;
 }
 
 a {
@@ -49,7 +55,7 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   padding: 0.4em;
-  margin: 0 0 0.5em 0;
+  /* margin: 0 0 0.5em 0; */
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 2px;
@@ -78,14 +84,10 @@ button {
 
 button:hover,
 button:active {
-  background: #e40763;
-  border-color: #e40763;
+  background: var(--primary);
+  border-color: var(--primary);
   box-shadow: 1px 1px 8px rgba(77, 51, 51, 0.26);
 }
-
-/* button:active {
-  background-color: #ddd;
-} */
 
 button:focus {
   border-color: #666;
@@ -106,7 +108,7 @@ textarea {
 
 input:focus,
 textarea:focus {
-  border-color: #e40763;
+  border-color: var(--primary);
   outline: none;
 }
 
@@ -117,4 +119,9 @@ label {
 
 .form-control {
   padding: 0.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  display: inline-block;
 }

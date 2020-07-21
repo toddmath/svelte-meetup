@@ -1,174 +1,105 @@
 <script>
-	import ContactCard from './ContactCard.svelte'
+	import Header from './UI/Header.svelte'
+	import MeetupGrid from './Meetups/MeetupGrid.svelte'
+	import TextInput from './UI/TextInput.svelte'
+	import Button from './UI/Button.svelte'
 
-	let age = 34;
-	let name = 'Todd';
-	let description = 'A short description'
-	let jobTitle = 'Full stack developer'
-	let imageSrc = 'https://images.unsplash.com/photo-1504401774599-1b5378bfaae3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1348&q=80'
-	let formState = 'empty';
+	let title = ''
+	let subtitle = ''
+	let address = ''
+	let email = ''
+	let imageUrl = ''
+	let description = ''
 
-	let createdContacts = []
+	let meetups = [
+		{
+			id: 'm1',
+			title: 'Coding Bootcamp',
+			subtitle: 'Learn to code in 2 hours',
+			description: 'In this meetup, we will have some experts that teach you how to code!',
+			imageUrl: 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2866&q=80',
+			address: '27th Nerd Road, 32523 New York',
+			contactEmail: 'code@test.com'
+		},
+		{
+			id: 'm2',
+			title: 'Swim Together',
+			subtitle: 'Let\'s go for some swimming',
+			description: 'We will simply swim some rounds!',
+			imageUrl: 'https://images.unsplash.com/photo-1590674023830-9107e8f6e2ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2467&q=80',
+			address: '27th Rooftop Ave, 32523 New York',
+			contactEmail: 'swim@rooftop.com'
+		}
+	]
 
-	$: uppercaseName = name.toUpperCase()
+	function addMeetup() {
+		const newMeetup = {
+			id: Math.random().toString(),
+			title,
+			subtitle,
+			description,
+			imageUrl,
+			address,
+			contactEmail: email
+		}
 
-	function incrementAge() {
-		age += 1
+		meetups = [newMeetup, ...meetups]
 	}
-
-	function addContact() {
-		if (
-			name.trim().length == 0
-			|| jobTitle.trim().length == 0
-			|| imageSrc.trim().length == 0
-			|| description.trim().length == 0
-			) {
-			formState = 'invalid'
-			return
-	}
-
-		formState = 'done'
-		createdContacts = [
-			...createdContacts,
-			{
-				id: Math.random(),
-				name,
-				jobTitle,
-				imageUrl: imageSrc,
-				desc: description
-			}
-		]
- }
-
- function deleteFirst() {
-		createdContacts = createdContacts.slice(1)
- }
-
- function deleteLast() {
-		createdContacts = createdContacts.slice(0, -1)
- }
 </script>
 
+<Header />
+
 <main>
-	<h1>Hello {uppercaseName}, I'm {age} years old!</h1>
-
-	<button on:click={incrementAge}>Change Age</button>
-
-	<form id="form">
-		<div class="form__row-name">
-			<label for="name">Name</label>
-			<input name="name" type="text" bind:value={name} />
-		</div>
-		<div class="form__row-jobTitle">
-			<label for="job-title">Job Title</label>
-			<input name="job-title" type="text" bind:value={jobTitle} />
-		</div>
-		<div class="form__row-imgSrc">
-			<label for="image-src">Image url</label>
-			<input name="image-src" class="input--imgSrc" type="text" bind:value={imageSrc}>
-		</div>
-		<div>
-			<label for="description">Description</label>
-			<textarea name="description" id="description" rows="4" bind:value={description} />
-		</div>
-		<div class="form__row-btn">
-			<button on:click|preventDefault={addContact}>Add Contact Card</button>
-			<button on:click|preventDefault={deleteFirst}>Delete First</button>
-			<button on:click|preventDefault={deleteLast}>Delete Last</button>
-		</div>
+	<form on:submit|preventDefault={addMeetup}>
+		<TextInput
+			id="title"
+			label="Title"
+			value={title}
+			on:input={(event) => title = event.target.value} />
+		<TextInput
+			id="subtitle"
+			label="Subtitle"
+			value={subtitle}
+			on:input={(event) => subtitle = event.target.value} />
+		<TextInput
+			id="address"
+			label="Address"
+			type="address"
+			value={address}
+			on:input={(event) => address = event.target.value} />
+		<TextInput
+			id="imageURL"
+			label="Image URL"
+			type="url"
+			value={imageUrl}
+			on:input={(event) => imageUrl = event.target.value} />
+		<TextInput
+			id="email"
+			label="E-mail"
+			type="email"
+			value={email}
+			on:input={(event) => email = event.target.value} />
+		<TextInput
+			id="description"
+			label="Description"
+			value={description}
+			on:input={(event) => description = event.target.value}
+			controlType="textarea"
+			rows="3" />
+		<Button type="submit" caption="Save" />
 	</form>
-
-	{#if formState === 'invalid'}
-		<p>Invalid input.</p>
-	{:else}
-		<p>Please enter some  data and hit the button!</p>
-	{/if}
-
-	{#each createdContacts as contact, i (contact.id)}
-		<h2 class="contact__card--number"># {i + 1}</h2>
-		<ContactCard
-			name={contact.name}
-			description={contact.desc}
-			jobTitle={contact.jobTitle}
-			imageSrc={contact.imageUrl}
-		/>
-	{:else}
-		<p>Please start adding some contacts, we found none!</p>
-	{/each}
-
+	<MeetupGrid {meetups} />
 </main>
 
 <style>
 	main {
-		text-align: center;
 		padding: 1em;
-		max-width: 240px;
 		margin: 0 auto;
 	}
 
-	.contact__card--number {
-		text-align: left;
-	}
-
 	form {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 10px;
-		margin: 2em 0;
-	}
-
-	#form {
-    width: 30rem;
-    max-width: 100%;
-  }
-
-	form > div {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		column-gap: 5px;
-		row-gap: 3px;
-	}
-
-	.form__row-btn {
-		width: 100%;
-		display: flex;
-		justify-content: start;
-	}
-
-	label {
-		display: block;
-	}
-
-	input, textarea, button {
-		margin: 0;
-	}
-
-	input, textarea {
-		flex-grow: 1;
-		flex-shrink: 1;
-		width: 100%;
-	}
-
-	.form__row-jobTitle {
-		flex-basis: 50%;
-	}
-
-	.form__row-imgSrc {
-		flex-basis: 100%;
-	}
-
-	h1 {
-		color: #ff3e00;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
+		width: 30rem;
+		max-width: 90%;
+		margin: auto;
 	}
 </style>
